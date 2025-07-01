@@ -62,6 +62,7 @@ public:
 
   Q_INVOKABLE QStringList apps() const;
   Q_INVOKABLE int addApp(QString program) const;
+  Q_INVOKABLE int delApp(QString program) const;
 
   Q_INVOKABLE QString defaultApp() const;
   Q_INVOKABLE int defaultDpi() const;

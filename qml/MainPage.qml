@@ -119,6 +119,14 @@ Page {
                                         "program": model.program,
                                         "name": model.name
                                       })
+            menu: ContextMenu {
+                MenuItem { text: qsTr("Remove")
+                    onClicked: item.remorseDelete(function() {
+                        settings.delApp(model.program)
+                        item.hidden = true
+                    })
+                }
+            }
         }
 
         model: ListModel {}
@@ -237,6 +245,7 @@ Page {
                     placeholderText: "qt-example"
                     description: qsTr("Application binary name, as it appears as the first parameter to qt-runner.")
                     inputMethodHints: Qt.ImhNoAutoUppercase
+                    EnterKey.onClicked: focus = false
                     onTextChanged: newName = text
                 }
             }
