@@ -72,7 +72,7 @@ Page {
             title: qsTr("Qt Runner")
         }
 
-        delegate: ListItem {
+        delegate: ListItem { id: item
             contentHeight: Math.max(icon.height,
                                     name.height + fpk.height + fpk.anchors.topMargin) + Theme.paddingLarge
             width: alist.width
@@ -143,6 +143,7 @@ Page {
                     var dlg = pageStack.push(addAppPage)
                     dlg.accepted.connect(function() {
                         if (dlg.newName.trim().length) settings.addApp(dlg.newName.trim())
+                        alist.refresh()
                     })
                 }
             }
@@ -150,8 +151,11 @@ Page {
 
         VerticalScrollDecorator { flickable: alist }
 
-        Component.onCompleted: {
+        Component.onCompleted: refresh()
+
+        function refresh() {
             if (!modeSettings) return;
+            alist.model.clear()
             alist.model.append({
                                    'program': settings.defaultApp(),
                                    'name': qsTr('Default settings'),
