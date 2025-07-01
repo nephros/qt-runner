@@ -129,6 +129,15 @@ Page {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
+            MenuItem {
+                text: qsTr("Add App Config")
+                onClicked: {
+                    var dlg = pageStack.push(addAppPage)
+                    dlg.accepted.connect(function() {
+                        if (dlg.newName.trim().length) settings.addApp(dlg.newName.trim())
+                    })
+                }
+            }
         }
 
         VerticalScrollDecorator { flickable: alist }
@@ -212,6 +221,27 @@ Page {
         }
     }
 
+    Component { id: addAppPage
+        Dialog {
+            property string newName
+            SilicaFlickable {
+                anchors.fill: parent
+                DialogHeader { id: header }
+                TextField { id: field
+                    anchors {
+                        top: header.bottom
+                        topMargin: Theme.paddingLarge
+                        left: parent.left
+                        right: parent.right
+                    }
+                    placeholderText: "qt-example"
+                    description: qsTr("Application binary name, as it appears as the first parameter to qt-runner.")
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    onTextChanged: newName = text
+                }
+            }
+        }
+    }
     // Handling of contained application
     function windowAdded(window) {
         var windowContainerComponent = Qt.createComponent("WindowContainer.qml");

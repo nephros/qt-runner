@@ -61,6 +61,7 @@ public:
   Q_INVOKABLE int appTheme(QString program, bool merged=false) const;
 
   Q_INVOKABLE QStringList apps() const;
+  Q_INVOKABLE int addApp(QString program) const;
 
   Q_INVOKABLE QString defaultApp() const;
   Q_INVOKABLE int defaultDpi() const;

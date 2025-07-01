@@ -178,6 +178,17 @@ QStringList AppSettings::apps() const
   return arr;
 }
 
+int AppSettings::addApp(QString program) const
+{
+  QSettings settings;
+  QStringList arr = settings.value(SET_GENERAL "/applist").toStringList();
+  if (!arr.contains(program)) {
+      arr.append(program);
+      settings.setValue(SET_GENERAL "/applist", arr);
+  }
+  return arr.length();
+}
+
 QString AppSettings::defaultApp() const
 {
   return "default";
