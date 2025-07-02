@@ -83,7 +83,12 @@ Page {
                 anchors.leftMargin: Theme.horizontalPageMargin
                 anchors.top: parent.top
                 anchors.topMargin: Theme.paddingLarge/2
-                source: model.icon
+                source: {
+                    if (model.icon) return model.icon
+                    const ic = Qt.resolvedUrl("image://theme/" + model.program)
+                    if (ic) return ic
+                    return Qt.resolvedUrl("../icons/qt-runner.svg")
+                }
                 sourceSize.width: Theme.itemSizeLarge
             }
 
@@ -97,7 +102,7 @@ Page {
                 anchors.topMargin: Theme.paddingLarge/2
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeLarge
-                text: model.name
+                text: model.name ? model.name : ""
                 wrapMode: Text.WordWrap
             }
 
@@ -109,7 +114,7 @@ Page {
                 anchors.rightMargin: Theme.horizontalPageMargin
                 anchors.top: name.bottom
                 anchors.topMargin: Theme.paddingSmall
-                color: Theme.primaryColor
+                color: Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeSmall
                 text: model.program !== settings.defaultApp() ? model.program : ""
             }
