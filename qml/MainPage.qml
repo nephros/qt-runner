@@ -118,6 +118,20 @@ Page {
                 font.pixelSize: Theme.fontSizeSmall
                 text: model.program !== settings.defaultApp() ? model.program : ""
             }
+            TextField {
+                id: editfield
+                anchors.fill: parent
+                visible: false
+                enabled: visible
+                clip: true
+                backgroundStyle: TextEditor.FilledBackground
+                text: model.name
+                EnterKey.onClicked: {
+                    settings.setAppName(model.program, text.trim())
+                    alist.model.setProperty(index, "name", text.trim())
+                    visible = false
+                }
+            }
 
             onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"),
                                       {
@@ -125,6 +139,11 @@ Page {
                                         "name": model.name
                                       })
             menu: ContextMenu {
+                MenuItem { text: qsTr("Rename")
+                   onClicked: {
+                       editfield.visible = true
+                   }
+                }
                 MenuItem { text: qsTr("Remove")
                     onClicked: item.remorseDelete(function() {
                         settings.delApp(model.program)
