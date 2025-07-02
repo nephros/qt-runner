@@ -276,6 +276,28 @@ void AppSettings::setAppTheme(QString program, int theme)
     }
 }
 
+void AppSettings::setAppIcon(QString program, QString name) const
+{
+  QSettings settings;
+  if (!name.isEmpty())
+    {
+      settings.setValue(SET_APP + program + "/icon", name);
+	} else {
+      settings.remove(SET_APP + program + "/icon");
+    }
+}
+
+void AppSettings::setAppName(QString program, QString name) const
+{
+  QSettings settings;
+  if (!name.isEmpty())
+    {
+      settings.setValue(SET_APP + program + "/name", name);
+	} else {
+      settings.remove(SET_APP + program + "/name");
+    }
+}
+
 void AppSettings::setDark(bool dark)
 {
   if (dark == m_dark) return;
