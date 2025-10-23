@@ -38,6 +38,8 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QProcessEnvironment>
+#include <QTemporaryFile>
+#include <QDir>
 
 #include <iostream>
 #include <unistd.h>
@@ -73,6 +75,20 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
   // drop QT_WAYLAND_RESIZE_AFTER_SWAP as it leads to inability to interact with the
   // launched app. This issue appeared after Qt 5.15.9 update
   env.remove("QT_WAYLAND_RESIZE_AFTER_SWAP");
+
+  QTemporaryFile *qqc_env = new QTemporaryFile(QStringLiteral("%1/qt-runner_%2_XXXXXX").arg(QDir::tempPath(), program));
+  if(qqc_env->open()) {
+      QTextStream q(qqc_env);
+      q << "[Controls]" << "\n"
+        << "FallbackStyle=org.kde.breeze" << "\n"
+        << "\n"
+        << "[org.kde.breeze]" << "\n"
+        << "Font\Family=Sail Sans Pro" << "\n"
+        << "Font\Weight=Light" << "\n"
+        << "\n";
+      q.flush();
+      env.insert("QT_QUICK_CONTROLS_CONF", qqc_env->fileName());
+  }
 
   // dpi and scaling factor
   env.insert("QT_WAYLAND_FORCE_DPI", QString("%1").arg(appsettings.appDpi(program, true)));
