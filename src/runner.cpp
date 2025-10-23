@@ -88,6 +88,9 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
         << "\n";
       q.flush();
       env.insert("QT_QUICK_CONTROLS_CONF", qqc_env->fileName());
+      qDebug() << "Added on-the-fly QQC configuration file at" << qqc_qnv.fileName();
+  } else {
+      qDebug() << "Could not create temporary file.";
   }
 
   // dpi and scaling factor
