@@ -83,12 +83,12 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
         << "FallbackStyle=org.kde.breeze" << "\n"
         << "\n"
         << "[org.kde.breeze]" << "\n"
-        << "Font\Family=Sail Sans Pro" << "\n"
-        << "Font\Weight=Light" << "\n"
+        << "Font\\Family=Sail Sans Pro" << "\n"
+        << "Font\\Weight=Light" << "\n"
         << "\n";
       q.flush();
       env.insert("QT_QUICK_CONTROLS_CONF", qqc_env->fileName());
-      qDebug() << "Added on-the-fly QQC configuration file at" << qqc_qnv.fileName();
+      qDebug() << "Added on-the-fly QQC configuration file at" << qqc_env.fileName();
   } else {
       qDebug() << "Could not create temporary file.";
   }
