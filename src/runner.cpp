@@ -76,7 +76,8 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
   // launched app. This issue appeared after Qt 5.15.9 update
   env.remove("QT_WAYLAND_RESIZE_AFTER_SWAP");
 
-  QTemporaryFile *qqc_env = new QTemporaryFile(QStringLiteral("%1/qt-runner_%2_XXXXXX").arg(QDir::tempPath(), program));
+  QString tempTemplate(QStringLiteral("%1/qt-runner_%2_XXXXXX").arg(QDir::tempPath()).arg(program));
+  QTemporaryFile *qqc_env = new QTemporaryFile(tempTemplate);
   if(qqc_env->open()) {
       QTextStream q(qqc_env);
       q << "[Controls]" << "\n"
@@ -90,7 +91,7 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
       env.insert("QT_QUICK_CONTROLS_CONF", qqc_env->fileName());
       qDebug() << "Added on-the-fly QQC configuration file at" << qqc_env->fileName();
   } else {
-      qDebug() << "Could not create temporary file.";
+      qDebug() << "Could not create temporary file at" << tempTemplate;
   }
 
   // dpi and scaling factor
