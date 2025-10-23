@@ -38,8 +38,7 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QProcessEnvironment>
-#include <QTemporaryFile>
-#include <QDir>
+#include <QFile>
 
 #include <iostream>
 #include <unistd.h>
@@ -76,22 +75,15 @@ Runner::Runner(QString program, QStringList /*runner_options*/, QStringList prog
   // launched app. This issue appeared after Qt 5.15.9 update
   env.remove("QT_WAYLAND_RESIZE_AFTER_SWAP");
 
-  QString tempTemplate(QStringLiteral("%1/qt-runner_%2_XXXXXX").arg(QDir::tempPath()).arg(program.section('/', -1)));
-  QTemporaryFile *qqc_env = new QTemporaryFile(tempTemplate);
-  if(qqc_env->open()) {
-      QTextStream q(qqc_env);
-      q << "[Controls]" << "\n"
-        << "FallbackStyle=org.kde.breeze" << "\n"
-        << "\n"
-        << "[org.kde.breeze]" << "\n"
-        << "Font\\Family=Sail Sans Pro" << "\n"
-        << "Font\\Weight=Light" << "\n"
-        << "\n";
-      q.flush();
-      env.insert("QT_QUICK_CONTROLS_CONF", qqc_env->fileName());
-      qDebug() << "Added on-the-fly QQC configuration file at" << qqc_env->fileName();
+  QString qqc_conf_loc;
+  qqc_conf_loc.append( qset.fileName().section('/', 0, -2) );
+  qqc_conf_loc.append("/");
+  qqc_conf_loc.append("qtquickcontrols2.conf");
+  if(!env.contains("QT_QUICK_CONTROLS_CONF") && QFile::exists(qqc_conf_loc)) {
+      env.insert("QT_QUICK_CONTROLS_CONF", qqc_conf_loc);
+      qDebug() << "Added QQC configuration file at" << qqc_conf_loc;
   } else {
-      qDebug() << "Could not create temporary file at" << tempTemplate;
+      qDebug() << "No QQC configuration file at" << qqc_conf_loc;
   }
 
   // dpi and scaling factor
